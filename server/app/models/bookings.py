@@ -5,4 +5,3 @@ class Booking(BaseModel):
     destination: str
     date: str
     seats: int
-
