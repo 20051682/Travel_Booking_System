@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth, bookings
-from app.routes import distance_cal_router
-from app.routes import destination
+from app.routes import auth, bookings, hotel, destination
 
 app = FastAPI()
 
@@ -23,4 +21,4 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(bookings.router)
 app.include_router(destination.router)
-app.include_router(distance_cal_router.router)
+app.include_router(hotel.router)

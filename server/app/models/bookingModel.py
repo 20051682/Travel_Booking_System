@@ -1,11 +1,11 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class Booking(BaseModel):
-    name: str
-    email: str
+    user_id: str
     location_from: str
     location_to: str
     start_date: str
-    end_date: str
-    trip_: str
-    passengers: str
+    end_date: Optional[str] = None
+    passengers: int
+    trip_type: str  # should be 'oneway' or 'round'
