@@ -1,18 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, bookings
+from app.routes import distance_cal_router
+from app.routes import destination
 
 app = FastAPI()
 
-# Allow all origins for development purposes (you can restrict this in production)
+# Allow origins
 origins = [
-    "http://localhost:3000",  # React app origin
-    "http://127.0.0.1:3000",  # React app origin
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows the specified origins
+    allow_origins=origins,  # Allows origins
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers
@@ -20,4 +22,5 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(bookings.router)
-
+app.include_router(destination.router)
+app.include_router(distance_cal_router.router)

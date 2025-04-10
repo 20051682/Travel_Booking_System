@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import logo from '../images/logo2.jpeg';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -25,7 +26,16 @@ const NavBar = () => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-      <a className="navbar-brand" href="/home">Travel Booking</a>
+        <a className="navbar-brand" href="/home">
+        <img
+            src={logo}
+            alt="Logo"
+            width="40"
+            height="40"
+            className="d-inline-block align-top me-2"
+        />
+        <span style={{ marginTop: '5px', display: 'inline-block' }}>AHP Travels</span>
+        </a>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span className="navbar-toggler-icon"></span>
       </button>
