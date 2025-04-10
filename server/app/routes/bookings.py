@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from app.database import db
+from app.models.bookingModel import Booking
+from app.controllers.bookingController import create_booking
 
 router = APIRouter()
 
-@router.get("/bookings")
-def get_bookings():
-    bookings = list(db["bookings"].find({}, {"_id": 0}))
-    return bookings
+@router.post("/bookings")
+def add_booking(booking: Booking):
+    return create_booking(booking)
