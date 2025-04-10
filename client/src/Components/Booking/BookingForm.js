@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { bookingModel } from '../Models/bookingModel';
-import { submitBookingForm } from '../Controllers/bookingController';
-import '../styles/BookingForm.css';
+import { bookingModel } from '../../Models/bookingModel';
+import { submitBookingForm } from '../../Controllers/bookingController';
+import '../../styles/BookingForm.css';
+import NavBar from '../NavBar'
+
 
 const BookingForm = () => {
   const [formData, setFormData] = useState(bookingModel);
@@ -27,6 +29,9 @@ const BookingForm = () => {
   };
 
   return (
+  <>
+    <NavBar/>
+
     <div className="booking-form">
       <h2>Book Your Trip</h2>
       <form onSubmit={handleSubmit}>
@@ -73,6 +78,7 @@ const BookingForm = () => {
         <button type="submit">Submit Booking</button>
       </form>
     </div>
+    </>
   );
 };
 

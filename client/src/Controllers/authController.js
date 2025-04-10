@@ -15,6 +15,8 @@ export const registerUser = async (formData) => {
 export const loginUser = async (formData) => {
   try {
     const response = await axios.post(`${API_BASE}/login`, formData);
+    console.log("This is Login section!");
+    console.log("response:", response);
     if (response.data.access_token) {
       localStorage.setItem('token', response.data.access_token);
     }

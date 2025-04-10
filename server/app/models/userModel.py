@@ -1,10 +1,12 @@
 from pydantic import BaseModel, EmailStr
 
 class UserRegister(BaseModel):
-    username: str
+    first_name: str
+    last_name: str
     email: EmailStr
     password: str
-    role: str  # "user" or "admin"
+    number: str
+    role: str
 
 class UserLogin(BaseModel):
     email: EmailStr

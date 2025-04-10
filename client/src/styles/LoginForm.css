@@ -20,11 +20,22 @@
   .login-form button {
     width: 100%;
     padding: 10px;
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
+  }
+
+  .login-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: -0.4rem;
+    margin-bottom: 0.8rem;
   }
   

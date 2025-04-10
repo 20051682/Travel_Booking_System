@@ -1,32 +1,27 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import NavBar from './NavBar';
 
 const HomePage = () => {
-  const navigate = useNavigate();
+  const [role, setRole] = useState("");
 
-  const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear JWT token
-    navigate('/login'); // Redirect to login page
-  };
+  useEffect(() => {
+    const userRole = localStorage.getItem("role");
+    setRole(userRole);
+  }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Welcome to the Travel Booking System!</h2>
-      <p>You are successfully logged in.</p>
-      <button onClick={handleLogout} style={logoutBtnStyle}>Logout</button>
-    </div>
-  );
-};
+    <>
+      <NavBar />
+      <div className="container mt-5">
+        <h2>Welcome to the Travel Booking System!</h2>
+        <p>You are successfully logged in.</p>
 
-// Optional inline style for the button
-const logoutBtnStyle = {
-  marginTop: '1rem',
-  padding: '0.6rem 1.2rem',
-  backgroundColor: '#f44336',
-  color: 'white',
-  border: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer'
+        {role === "admin" && (
+          <button className="btn btn-danger mt-3">Admin Panel</button>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default HomePage;

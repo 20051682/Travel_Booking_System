@@ -13,7 +13,8 @@ def register_user(user: UserRegister):
     db.users.insert_one(user_dict)
 
     return {"message": "User registered successfully", "user": {
-        "username": user.username,
+        "username": user.first_name + " " + user.last_name,
+        "number" : user.number,
         "email": user.email,
         "role": user.role
     }}
@@ -31,4 +32,4 @@ def login_user(user: UserLogin):
         "role": db_user["role"]
     })
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "role":db_user["role"]}
