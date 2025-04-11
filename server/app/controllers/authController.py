@@ -40,7 +40,18 @@ def login_user(user: UserLogin):
     return {
         "access_token": token,
         "token_type": "bearer",
-        "role": db_user["role"]
+        "role": db_user["role"],
+        "user_info": {
+            "id": str(db_user["_id"]),
+            "first_name": db_user["first_name"],
+            "last_name": db_user["first_name"],
+            "email": db_user["email"],
+            "password": db_user["password"],
+            "number": db_user["number"],
+            "email": db_user["email"],
+            "role": db_user["role"]
+
+        }
     }
 
 def get_all_users():

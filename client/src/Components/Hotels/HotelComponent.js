@@ -3,10 +3,10 @@ import NavBar from '../NavBar';
 import '../../styles/Hotels.css';
 import { useNavigate } from 'react-router-dom';
 
-const HotelComponent = () => {
+const HotelComponent = () => { 
   // Dummy hotel data for now
   const hotelData = [
-    { id: 1, name: "Hotel Paradise", description: "A luxurious hotel with amazing views", price: "$150/night", image: "..\images\hotel1.jpeg" },
+    { id: 1, name: "Hotel Paradise", description: "A luxurious hotel with amazing views", price: "$150/night", image: "hotel1" },
     { id: 2, name: "Ocean Breeze Resort", description: "Relax by the beach with top-tier amenities", price: "$200/night", image: "https://via.placeholder.com/300x200?text=Hotel+2" },
     { id: 3, name: "Mountain Escape", description: "Escape to the mountains for a peaceful stay", price: "$180/night", image: "https://via.placeholder.com/300x200?text=Hotel+3" },
     { id: 4, name: "Luxury Inn", description: "A 5-star experience in the heart of the city", price: "$220/night", image: "https://via.placeholder.com/300x200?text=Hotel+4" },
@@ -59,10 +59,10 @@ const HotelComponent = () => {
     navigate(`/hotel/${hotelId}`);
   };
 
-//   const handleDeleteHotel = (hotelId) => {
-//     const updatedHotels = hotelData.filter((hotel) => hotel.id !== hotelId);
-//     setHotelData(updatedHotels);
-//   };
+  // const handleDeleteHotel = (hotelId) => {
+    //const updatedHotels = hotelData.filter((hotel) => hotel.id !== hotelId);
+    //setHotelData(updatedHotels);
+ // };
 
   return (
     <>
@@ -90,7 +90,10 @@ const HotelComponent = () => {
 
                   {role === "admin" && (
                     <>
-                        <button className="btn btn-warning">Update Hotel</button>
+                        <button className="btn btn-warning me-2" onClick={() => navigate(`/update_hotel/${hotel.id}`)}>
+                        Update Hotel
+                        </button>
+
                         <button className="btn btn-danger">Delete Hotel</button>
                     </>
                   )}

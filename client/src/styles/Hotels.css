@@ -1,18 +1,164 @@
+/* Set black and white travel background */
+body {
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+              url('https://images.unsplash.com/photo-1530306760000-d7c3491582b4?fit=crop&w=1200&h=800&auto=format&ixlib=rb-1.2.1') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Add some spacing and padding to the container */
+.container {
+  background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white for soft feel */
+  padding: 40px;
+  border-radius: 15px;
+  max-width: 90%;
+  margin: 30px auto;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the heading */
+h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Style for the hotel cards */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fff; /* White card background to contrast */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  border-bottom: 3px solid #f8f9fa;
+  border-radius: 10px 10px 0 0;
+  object-fit: cover;
+  height: 200px;
+  filter: grayscale(100%); /* Apply black and white filter */
+  transition: transform 0.4s ease-in-out;
+}
+
+.card-img-top:hover {
+  transform: scale(1.1);
+  filter: grayscale(0%); /* Hover effect to reveal color */
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.card-text strong {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Style for the buttons */
+button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: background-color 0.3s, transform 0.2s;
+  border: none;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.btn-primary {
+  background-color: #3498db; /* Changed to a vibrant blue */
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9; /* Darker blue on hover */
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Styling for pagination buttons */
+.d-flex button {
+  margin-top: 20px;
+  margin-right: 10px;
+  border-radius: 30px;
+  transition: background-color 0.3s;
+}
+
+.d-flex button:hover {
+  background-color: #3498db; /* Blue hover effect for pagination */
+  color: #fff;
+}
+
+/* Adjustments for responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    margin: 20px;
   }
   
-  .card:hover {
-    transform: scale(1.05);
+  .card {
+    margin-bottom: 15px;
   }
-  
-  .card-img-top {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    height: 200px;
-    object-fit: cover;
+
+  h2 {
+    font-size: 2rem;
   }
-  
+
+  .col-md-4 {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+}

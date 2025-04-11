@@ -21,6 +21,7 @@ const LoginForm = () => {
     if (result?.access_token) {
       localStorage.setItem("token", result.access_token);
       localStorage.setItem("role", result.role);
+      localStorage.setItem("user_info", JSON.stringify(result.user_info));
 
       navigate("/home");
       Swal.fire({
@@ -58,7 +59,6 @@ const LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <input name="email" type="text" className="form-control" placeholder="Email" onChange={handleChange} required />
-              {errors.email && <p className="text-danger small">{errors.email}</p>}
             </div>
             <div className="mb-3">
               <input name="password" type="password" className="form-control" placeholder="Password" onChange={handleChange} required />

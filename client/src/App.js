@@ -10,7 +10,8 @@ import HotelPage from './Components/Hotels/HotelComponent';
 import AddHotelPage from './Components/Hotels/AddHotelPage';
 import HotelDetails from './Components/Hotels/HotelDetails';
 import Packages from './Components/Packages/Packages';
-
+import UpdateHotelComponent from './Components/Hotels/UpdateHotelComponent';
+import ProfilePage from './Components/User/UserProfileComponent';
 
 function App() {
   return (
@@ -53,7 +54,20 @@ function App() {
               <HotelDetails />
             </PrivateRoute>
           }
+        /> 
+        <Route path="/update_hotel/:hotelId"
+         element={
+         <UpdateHotelComponent />
+         }
         />
+        <Route path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
+        
          <Route path="/packages"
           element={
             <PrivateRoute>

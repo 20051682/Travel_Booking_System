@@ -54,6 +54,9 @@ const NavBar = () => {
           <li className="nav-item">
             <a className={`nav-link ${location.pathname === '/hotels' ? 'active' : ''}`} href="/hotels">Hotels</a>
           </li>
+          <li className="nav-item">
+            <a className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`} href="/profile">Profile</a>
+          </li>
         </ul>
         <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
       </div>
