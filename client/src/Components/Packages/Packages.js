@@ -47,7 +47,7 @@ const Packages = () => {
 
         {role === "admin" && (
             <button className="btn btn-primary" onClick={handleAddPackage}>
-              <span className="me-2">+</span>Add Hotel
+              <span className="me-2">+</span>Add Package
             </button>
         )}
 

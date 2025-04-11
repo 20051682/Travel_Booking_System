@@ -12,6 +12,7 @@ import HotelDetails from './Components/Hotels/HotelDetails';
 import Packages from './Components/Packages/Packages';
 import UpdateHotelComponent from './Components/Hotels/UpdateHotelComponent';
 import ProfilePage from './Components/User/UserProfileComponent';
+import AddPackage from './Components/Packages/AddPackagePage';
 
 function App() {
   return (
@@ -75,6 +76,14 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/add_package"
+          element={
+            <PrivateRoute>
+              <AddPackage />
+            </PrivateRoute>
+          }
+        />
+        
         {/* 404 error */}
         <Route path="*" element={<NotFound />} />
       </Routes>
