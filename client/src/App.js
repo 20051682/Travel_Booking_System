@@ -7,7 +7,7 @@ import PrivateRoute from './Components/PrivateRoute';
 import BookingForm from './Components/Booking/BookingForm';
 import NotFound from './Components/NotFound'; 
 import HotelPage from './Components/Hotels/HotelComponent';
-import AddHotel from './Components/Hotels/AddHotelComponent';
+import AddHotelPage from './Components/Hotels/AddHotelPage';
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
         <Route path="/add_hotel"
           element={
             <PrivateRoute>
-              <AddHotel />
+              <AddHotelPage />
             </PrivateRoute>
           }
         />

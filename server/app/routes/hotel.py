@@ -15,6 +15,7 @@ router = APIRouter()
 @router.post("/hotel")
 async def add_hotel(
     name: str = Form(...),
+    description: str = Form(...),
     price_per_single_room: float = Form(...),
     price_per_double_room: float = Form(...),
     price_per_large_room: float = Form(...),
@@ -25,6 +26,7 @@ async def add_hotel(
 ):
     hotel = Hotel(
         name=name,
+        description=description,
         price_per_single_room=price_per_single_room,
         price_per_double_room=price_per_double_room,
         price_per_large_room=price_per_large_room,
