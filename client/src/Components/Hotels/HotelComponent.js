@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const HotelComponent = () => {
   // Dummy hotel data for now
   const hotelData = [
-    { id: 1, name: "Hotel Paradise", description: "A luxurious hotel with amazing views", price: "$150/night", image: "https://via.placeholder.com/300x200?text=Hotel+1" },
+    { id: 1, name: "Hotel Paradise", description: "A luxurious hotel with amazing views", price: "$150/night", image: "..\images\hotel1.jpeg" },
     { id: 2, name: "Ocean Breeze Resort", description: "Relax by the beach with top-tier amenities", price: "$200/night", image: "https://via.placeholder.com/300x200?text=Hotel+2" },
     { id: 3, name: "Mountain Escape", description: "Escape to the mountains for a peaceful stay", price: "$180/night", image: "https://via.placeholder.com/300x200?text=Hotel+3" },
     { id: 4, name: "Luxury Inn", description: "A 5-star experience in the heart of the city", price: "$220/night", image: "https://via.placeholder.com/300x200?text=Hotel+4" },
@@ -44,7 +44,6 @@ const HotelComponent = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  // Dummy role for testing purposes
   const [role, setRole] = useState("");
 
   useEffect(() => {
@@ -56,16 +55,28 @@ const HotelComponent = () => {
     navigate('/add_hotel');
   };
 
+  const handleViewHotel = (hotelId) => {
+    navigate(`/hotel/${hotelId}`);
+  };
+
+//   const handleDeleteHotel = (hotelId) => {
+//     const updatedHotels = hotelData.filter((hotel) => hotel.id !== hotelId);
+//     setHotelData(updatedHotels);
+//   };
+
   return (
     <>
       <NavBar />
       <div className="container mt-5">
-        <h2 className="text-center mb-4">Hotel Listings</h2>
-        {role === "admin" && (
-                    <>
-                        <button className="btn btn-primary" onClick={handleAddHotel}>Add Hotel</button>
-                    </>
-        )}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="m-auto">Hotel Listings</h2>
+
+          {role === "admin" && (
+            <button className="btn btn-primary" onClick={handleAddHotel}>
+              <span className="me-2">+</span>Add Hotel
+            </button>
+          )}
+        </div>
 
         <div className="row">
           {currentHotels.map((hotel) => (
@@ -83,10 +94,13 @@ const HotelComponent = () => {
                         <button className="btn btn-danger">Delete Hotel</button>
                     </>
                   )}
-                    {role === "user" && (
+                  {role === "user" && (
                     <>
-                        <button className="btn btn-warning">View</button>
-                        <button className="btn btn-primary">Book</button>
+                     <button className="btn btn-warning me-2" onClick={() => navigate(`/hotel/${hotel.id}`)}>
+                     View
+                     </button>
+
+                      <button className="btn btn-primary">Book</button>
                     </>
                   )}
                 </div>
