@@ -59,10 +59,10 @@ const HotelComponent = () => {
     navigate(`/hotel/${hotelId}`);
   };
 
-//   const handleDeleteHotel = (hotelId) => {
-//     const updatedHotels = hotelData.filter((hotel) => hotel.id !== hotelId);
-//     setHotelData(updatedHotels);
-//   };
+  // const handleDeleteHotel = (hotelId) => {
+    //const updatedHotels = hotelData.filter((hotel) => hotel.id !== hotelId);
+    //setHotelData(updatedHotels);
+ // };
 
   return (
     <>

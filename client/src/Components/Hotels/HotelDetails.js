@@ -4,7 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import NavBar from '../NavBar'; // Import NavBar component
 
 const HotelDetails = () => {
-  const { hotelId } = useParams(); // Get the hotelId from the URL
+//   const { hotelId } = useParams(); // Get the hotelId from the URL
+  const hotelId = 2;
+  console.log("hotel cheeeeeck",hotelId);
   const [hotel, setHotel] = useState(null);
   const navigate = useNavigate();
 

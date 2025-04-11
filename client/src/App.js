@@ -58,6 +58,7 @@ function App() {
          <UpdateHotelComponent />
          }
         />
+        
         {/* 404 error */}
         <Route path="*" element={<NotFound />} />
       </Routes>
