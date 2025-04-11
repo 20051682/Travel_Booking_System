@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class Hotel(BaseModel):
     name: str
@@ -8,4 +9,4 @@ class Hotel(BaseModel):
     start_date: str
     end_date: str
     location: str
-
+    image_url: Optional[str] = None  # Add image_url field

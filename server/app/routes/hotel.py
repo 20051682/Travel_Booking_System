@@ -1,5 +1,5 @@
 # app/routes/destinationRoutes.py
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile, Form
 from app.models.hotelModel import Hotel
 from app.controllers.hotelController import (
     create_hotel,
@@ -13,8 +13,26 @@ router = APIRouter()
 
 # Create a hotel
 @router.post("/hotel")
-def add_hotel(hotel: Hotel):
-    return create_hotel(hotel)
+async def add_hotel(
+    name: str = Form(...),
+    price_per_single_room: float = Form(...),
+    price_per_double_room: float = Form(...),
+    price_per_large_room: float = Form(...),
+    start_date: str = Form(...),
+    end_date: str = Form(...),
+    location: str = Form(...),
+    image_file: UploadFile = File(None)
+):
+    hotel = Hotel(
+        name=name,
+        price_per_single_room=price_per_single_room,
+        price_per_double_room=price_per_double_room,
+        price_per_large_room=price_per_large_room,
+        start_date=start_date,
+        end_date=end_date,
+        location=location,
+    )
+    return create_hotel(hotel, image_file)
 
 # Read all hotels
 @router.get("/hotels")

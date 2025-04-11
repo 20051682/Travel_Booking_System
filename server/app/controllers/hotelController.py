@@ -1,15 +1,38 @@
 from app.models.hotelModel import Hotel
 from app.database.mongodb import db
 from bson import ObjectId
+from typing import Optional
+from fastapi import HTTPException, UploadFile
+from firebase_admin import storage
+from app.firebase import firebase_config
 
-def create_hotel(hotel: Hotel):
-    dest_dict = hotel.dict()
-    result = db.hotels.insert_one(dest_dict)
+def upload_image_to_firebase(image_file: UploadFile):
+    file_name = f"hotels/{image_file.filename}"
+
+    bucket = storage.bucket()
+    blob = bucket.blob(file_name)
+    blob.upload_from_file(image_file.file, content_type=image_file.content_type)
+    blob.make_public()
+
+    return blob.public_url
+
+def create_hotel(hotel: Hotel, image_file: Optional[UploadFile] = None):
+    hotel_dict = hotel.dict()
+
+    if image_file:
+        try:
+            image_url = upload_image_to_firebase(image_file)
+            hotel_dict["image_url"] = image_url
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
+
+    result = db.hotels.insert_one(hotel_dict)
     return {
         "message": "Hotel added successfully",
         "hotel": {
             "id": str(result.inserted_id),
-            "name": hotel.name
+            "name": hotel.name,
+            "image_url": hotel_dict.get("image_url")
         }
     }
 
