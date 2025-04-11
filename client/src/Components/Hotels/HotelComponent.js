@@ -103,7 +103,7 @@ const HotelComponent = () => {
                      View
                      </button>
 
-                      <button className="btn btn-primary">Book</button>
+                    
                     </>
                   )}
                 </div>

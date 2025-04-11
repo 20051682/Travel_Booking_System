@@ -46,20 +46,23 @@ const HotelDetails = () => {
   }
 
   return (
-    <div className="container mt-5">
-      <NavBar /> {/* Add NavBar at the top of the page */}
-      <div className="card mb-4">
-        <img src={hotel.image} className="card-img-top" alt={hotel.name} />
-        <div className="card-body">
-          <h3>{hotel.name}</h3>
-          <p>{hotel.detailedDescription}</p> {/* Detailed description */}
-          <p><strong>{hotel.price}</strong></p>
-          <p><strong>Rating: </strong>{getRatingStars(hotel.rating)}</p> {/* Display rating stars */}
-          <button className="btn btn-primary">Book Now</button>
+    <>
+        <NavBar />
+        <div className="container mt-5">
+        <div className="card mb-4">
+            <img src={hotel.image} className="card-img-top" alt={hotel.name} />
+            <div className="card-body">
+            <h3>{hotel.name}</h3>
+            <p>{hotel.detailedDescription}</p> {/* Detailed description */}
+            <p><strong>{hotel.price}</strong></p>
+            <p><strong>Rating: </strong>{getRatingStars(hotel.rating)}</p> {/* Display rating stars */}
+            <button className="btn btn-primary">Book Now</button>
+            </div>
         </div>
-      </div>
-      <button onClick={() => navigate('/')} className="btn btn-secondary">Back to Listings</button>
-    </div>
+        <button onClick={() => navigate('hotels')} className="btn btn-secondary">Back to Listings</button>
+        </div>
+    </>
+
   );
 };
 
