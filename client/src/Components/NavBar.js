@@ -52,7 +52,7 @@ const NavBar = () => {
             <a className={`nav-link ${location.pathname === '/packages' ? 'active' : ''}`} href="/packages">Packages</a>
           </li>
           <li className="nav-item">
-            <a className={`nav-link ${location.pathname === '/restaurants' ? 'active' : ''}`} href="/restaurants">Restaurants</a>
+            <a className={`nav-link ${location.pathname === '/hotels' ? 'active' : ''}`} href="/hotels">Hotels</a>
           </li>
         </ul>
         <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>

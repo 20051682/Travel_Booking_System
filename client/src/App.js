@@ -6,6 +6,7 @@ import HomePage from './Components/HomePage';
 import PrivateRoute from './Components/PrivateRoute';
 import BookingForm from './Components/Booking/BookingForm';
 import NotFound from './Components/NotFound'; 
+import HotelPage from './Components/Hotels/HotelComponent';
 
 function App() {
   return (
@@ -25,6 +26,13 @@ function App() {
           element={
             <PrivateRoute>
               <BookingForm />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/hotels"
+          element={
+            <PrivateRoute>
+              <HotelPage />
             </PrivateRoute>
           }
         />
