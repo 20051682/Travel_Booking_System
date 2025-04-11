@@ -8,7 +8,9 @@ import BookingForm from './Components/Booking/BookingForm';
 import NotFound from './Components/NotFound'; 
 import HotelPage from './Components/Hotels/HotelComponent';
 import AddHotelPage from './Components/Hotels/AddHotelPage';
-import HotelDetails from './Components/Hotels/HotelDetails'
+import HotelDetails from './Components/Hotels/HotelDetails';
+import Packages from './Components/Packages/Packages';
+
 
 function App() {
   return (
@@ -49,6 +51,13 @@ function App() {
           element={
             <PrivateRoute>
               <HotelDetails />
+            </PrivateRoute>
+          }
+        />
+         <Route path="/packages"
+          element={
+            <PrivateRoute>
+              <Packages />
             </PrivateRoute>
           }
         />
