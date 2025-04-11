@@ -4,28 +4,31 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
 const AddHotelComponent = () => {
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price_per_single_room: '',
+    price_per_double_room: '',
+    price_per_large_room: '',
+    start_date: '',
+    end_date: '',
+    location: '',
+  });
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null); 
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        price_per_single_room: '',
-        price_per_double_room: '',
-        price_per_large_room: '',
-        start_date: '',
-        end_date: '',
-        location: '',
-    });
-    const [image, setImage] = useState(null);
-    // const [message, setMessage] = useState('');
-    const navigate = useNavigate();
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    setImage(file);
+    if (file) {
+      setImagePreview(URL.createObjectURL(file)); 
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -41,88 +44,79 @@ const AddHotelComponent = () => {
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/hotel', payload, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
+      await axios.post('http://localhost:8000/hotel', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-        navigate("/hotels");
+      navigate("/hotels");
 
-        // setMessage('Hotel added successfully!');
-        Swal.fire({
-            icon: 'success',
-            title: 'Hotel added successfully!',
-            text: 'Welcome back!',
-            timer: 2000,
-            showConfirmButton: false,
-        });
-      
+      Swal.fire({
+        icon: 'success',
+        title: 'Hotel added successfully!',
+        text: 'Welcome back!',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
     } catch (error) {
-        console.error(error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Adding failed!',
-        });
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Adding failed!',
+      });
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Add a New Hotel</h2>
-      {/* {message && <div className="alert alert-info">{message}</div>} */}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Name:</label>
-          <input type="text" name="name" className="form-control" onChange={handleChange} required />
-        </div>
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+      <div className="card shadow p-4" style={{ maxWidth: '700px', width: '100%',marginTop: '5rem', marginBottom: '4rem' }}>
+        <h2 className="mb-4 text-center text-primary">Add a New Hotel</h2>
 
-        <div className="mb-3">
-          <label>Description:</label>
-          <input type="text" name="description" className="form-control" onChange={handleChange} required />
-        </div>
+        <form onSubmit={handleSubmit}>
+          {[
+            { label: 'Name', name: 'name', type: 'text' },
+            { label: 'Description', name: 'description', type: 'text' },
+            { label: 'Price (Single Room)', name: 'price_per_single_room', type: 'number' },
+            { label: 'Price (Double Room)', name: 'price_per_double_room', type: 'number' },
+            { label: 'Price (Large Room)', name: 'price_per_large_room', type: 'number' },
+            { label: 'Start Date', name: 'start_date', type: 'date' },
+            { label: 'End Date', name: 'end_date', type: 'date' },
+            { label: 'Location', name: 'location', type: 'text' },
+          ].map(({ label, name, type }) => (
+            <div className="mb-3" key={name}>
+              <label className="form-label">{label}:</label>
+              <input
+                type={type}
+                name={name}
+                className="form-control"
+                onChange={handleChange}
+                required
+              />
+            </div>
+          ))}
 
-        <div className="mb-3">
-          <label>Price (Single Room):</label>
-          <input type="number" name="price_per_single_room" className="form-control" onChange={handleChange} required />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Hotel Image:</label>
+            <input type="file" className="form-control" onChange={handleImageChange} />
+            {imagePreview && (
+              <div className="mt-3 text-center">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '10px', border: '1px solid #ccc' }}
+                />
+              </div>
+            )}
+          </div>
 
-        <div className="mb-3">
-          <label>Price (Double Room):</label>
-          <input type="number" name="price_per_double_room" className="form-control" onChange={handleChange} required />
-        </div>
-
-        <div className="mb-3">
-          <label>Price (Large Room):</label>
-          <input type="number" name="price_per_large_room" className="form-control" onChange={handleChange} required />
-        </div>
-
-        <div className="mb-3">
-          <label>Start Date:</label>
-          <input type="date" name="start_date" className="form-control" onChange={handleChange} required />
-        </div>
-
-        <div className="mb-3">
-          <label>End Date:</label>
-          <input type="date" name="end_date" className="form-control" onChange={handleChange} required />
-        </div>
-
-        <div className="mb-3">
-          <label>Location:</label>
-          <input type="text" name="location" className="form-control" onChange={handleChange} required />
-        </div>
-
-        <div className="mb-3">
-          <label>Hotel Image:</label>
-          <input type="file" className="form-control" onChange={handleImageChange} />
-        </div>
-
-        <button type="submit" className="btn btn-success" disabled={loading}>
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
             {loading ? 'Adding...' : 'Add Hotel'}
-        </button>
-
-      </form>
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

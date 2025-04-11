@@ -1,18 +1,124 @@
+/* Set background for the whole page */
+body {
+  background: url('https://via.placeholder.com/1920x1080?text=Background') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Add some spacing and padding to the container */
+.container {
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  padding: 30px;
+  border-radius: 15px;
+}
+
+/* Style the heading */
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Style for the hotel cards */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  border-bottom: 3px solid #f8f9fa;
+  border-radius: 10px 10px 0 0;
+  object-fit: cover;
+  height: 200px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #555;
+}
+
+.card-text strong {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Style for the buttons */
+button {
+  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Styling for pagination buttons */
+.d-flex button {
+  margin-top: 20px;
+  margin-right: 10px;
+  border-radius: 30px;
+}
+
+/* Adjustments for responsiveness */
+@media (max-width: 768px) {
+  .col-md-4 {
+    max-width: 100%;
+    flex: 1 1 100%;
   }
-  
-  .card:hover {
-    transform: scale(1.05);
+
+  .container {
+    padding: 20px;
   }
-  
-  .card-img-top {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    height: 200px;
-    object-fit: cover;
-  }
-  
+}

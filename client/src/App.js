@@ -8,7 +8,8 @@ import BookingForm from './Components/Booking/BookingForm';
 import NotFound from './Components/NotFound'; 
 import HotelPage from './Components/Hotels/HotelComponent';
 import AddHotelPage from './Components/Hotels/AddHotelPage';
-import HotelDetails from './Components/Hotels/HotelDetails'
+import HotelDetails from './Components/Hotels/HotelDetails';
+import UpdateHotelComponent from './Components/Hotels/UpdateHotelComponent';
 
 function App() {
   return (
@@ -51,6 +52,11 @@ function App() {
               <HotelDetails />
             </PrivateRoute>
           }
+        /> 
+        <Route path="/update_hotel/:hotelId"
+         element={
+         <UpdateHotelComponent />
+         }
         />
         {/* 404 error */}
         <Route path="*" element={<NotFound />} />
