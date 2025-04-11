@@ -14,8 +14,6 @@ const UpdateHotelComponent = () => {
     price_per_single_room: '',
     price_per_double_room: '',
     price_per_large_room: '',
-    start_date: '',
-    end_date: '',
     location: '',
   });
 
@@ -35,12 +33,10 @@ const UpdateHotelComponent = () => {
           price_per_single_room: hotel.price_per_single_room,
           price_per_double_room: hotel.price_per_double_room,
           price_per_large_room: hotel.price_per_large_room,
-          start_date: hotel.start_date,
-          end_date: hotel.end_date,
           location: hotel.location,
         });
 
-        setImagePreview(hotel.image_url); // assuming backend sends image URL
+        setImagePreview(hotel.image_url);
       } catch (error) {
         console.error("Error fetching hotel:", error);
         Swal.fire("Error", "Could not fetch hotel details.", "error");
@@ -103,8 +99,6 @@ const UpdateHotelComponent = () => {
               { label: 'Price (Single Room)', name: 'price_per_single_room', type: 'number' },
               { label: 'Price (Double Room)', name: 'price_per_double_room', type: 'number' },
               { label: 'Price (Large Room)', name: 'price_per_large_room', type: 'number' },
-              { label: 'Start Date', name: 'start_date', type: 'date' },
-              { label: 'End Date', name: 'end_date', type: 'date' },
               { label: 'Location', name: 'location', type: 'text' },
             ].map(({ label, name, type }) => (
               <div className="mb-3" key={name}>

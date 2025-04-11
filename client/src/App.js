@@ -49,7 +49,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/hotel/:id"
+        <Route path="/hotel/:hotelId"
           element={
             <PrivateRoute>
               <HotelDetails />

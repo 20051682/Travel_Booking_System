@@ -19,8 +19,6 @@ async def add_hotel(
     price_per_single_room: float = Form(...),
     price_per_double_room: float = Form(...),
     price_per_large_room: float = Form(...),
-    start_date: str = Form(...),
-    end_date: str = Form(...),
     location: str = Form(...),
     image_file: UploadFile = File(None)
 ):
@@ -30,8 +28,6 @@ async def add_hotel(
         price_per_single_room=price_per_single_room,
         price_per_double_room=price_per_double_room,
         price_per_large_room=price_per_large_room,
-        start_date=start_date,
-        end_date=end_date,
         location=location,
     )
     return create_hotel(hotel, image_file)
@@ -48,8 +44,25 @@ def get_hotel(hotel_id: str):
 
 # Update a hotel by ID
 @router.put("/hotel/{hotel_id}")
-def modify_hotel(hotel_id: str, hotel: Hotel):
-    return update_hotel(hotel_id, hotel)
+async def modify_hotel(
+    hotel_id: str,
+    name: str = Form(...),
+    description: str = Form(...),
+    price_per_single_room: float = Form(...),
+    price_per_double_room: float = Form(...),
+    price_per_large_room: float = Form(...),
+    location: str = Form(...),
+    image_file: UploadFile = File(None)
+):
+    hotel = Hotel(
+        name=name,
+        description=description,
+        price_per_single_room=price_per_single_room,
+        price_per_double_room=price_per_double_room,
+        price_per_large_room=price_per_large_room,
+        location=location,
+    )
+    return update_hotel(hotel_id, hotel, image_file)
 
 # Delete a hotel by ID
 @router.delete("/hotel/{hotel_id}")

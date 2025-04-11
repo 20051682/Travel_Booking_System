@@ -2,40 +2,45 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../NavBar';
 import '../../styles/Hotels.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
-const HotelComponent = () => { 
-  // Dummy hotel data for now
-  const hotelData = [
-    { id: 1, name: "Hotel Paradise", description: "A luxurious hotel with amazing views", price: "$150/night", image: "hotel1" },
-    { id: 2, name: "Ocean Breeze Resort", description: "Relax by the beach with top-tier amenities", price: "$200/night", image: "https://via.placeholder.com/300x200?text=Hotel+2" },
-    { id: 3, name: "Mountain Escape", description: "Escape to the mountains for a peaceful stay", price: "$180/night", image: "https://via.placeholder.com/300x200?text=Hotel+3" },
-    { id: 4, name: "Luxury Inn", description: "A 5-star experience in the heart of the city", price: "$220/night", image: "https://via.placeholder.com/300x200?text=Hotel+4" },
-    { id: 5, name: "Desert Oasis", description: "Stay in the middle of the desert with all the comforts", price: "$160/night", image: "https://via.placeholder.com/300x200?text=Hotel+5" },
-    { id: 6, name: "City Lights Hotel", description: "A hotel in the city center with a stunning skyline view", price: "$250/night", image: "https://via.placeholder.com/300x200?text=Hotel+6" },
-    { id: 7, name: "Seaside Retreat", description: "Wake up to the sound of the waves and a beautiful sunrise", price: "$170/night", image: "https://via.placeholder.com/300x200?text=Hotel+7" },
-    { id: 8, name: "Forest Lodge", description: "Stay surrounded by nature and tranquility", price: "$140/night", image: "https://via.placeholder.com/300x200?text=Hotel+8" },
-    { id: 9, name: "Island Getaway", description: "Your private island paradise awaits", price: "$300/night", image: "https://via.placeholder.com/300x200?text=Hotel+9" },
-    { id: 10, name: "Urban Stay", description: "Convenience and luxury in the heart of the city", price: "$210/night", image: "https://via.placeholder.com/300x200?text=Hotel+10" },
-    { id: 11, name: "Countryside Retreat", description: "A peaceful stay in the heart of the countryside", price: "$190/night", image: "https://via.placeholder.com/300x200?text=Hotel+11" },
-    { id: 12, name: "Luxury Palace", description: "Stay like royalty in our luxurious rooms", price: "$350/night", image: "https://via.placeholder.com/300x200?text=Hotel+12" },
-    // You can add more data as needed
-  ];
-
+const HotelComponent = () => {
+  const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 9;
   const navigate = useNavigate();
+  const [role, setRole] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Calculate current hotels to show
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("role");
+    setRole(userRole);
+
+    // Fetch hotel data
+    axios.get('http://localhost:8000/hotels/')
+      .then((response) => {
+        setHotels(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching hotels:", error);
+        Swal.fire('Error', 'Failed to load hotels', 'error');
+      });
+  }, []);
+
+  // Pagination logic
   const indexOfLastHotel = currentPage * hotelsPerPage;
   const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
-  const currentHotels = hotelData.slice(indexOfFirstHotel, indexOfLastHotel);
+  const currentHotels = hotels
+  .filter(hotel => hotel.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  .slice(indexOfFirstHotel, indexOfLastHotel);
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Determine the total pages for pagination
-  const totalPages = Math.ceil(hotelData.length / hotelsPerPage);
-
+  const filteredHotels = hotels.filter(hotel =>
+    hotel.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredHotels.length / hotelsPerPage);
+  
   const handlePrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -43,13 +48,6 @@ const HotelComponent = () => {
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
-
-  const [role, setRole] = useState("");
-
-  useEffect(() => {
-    const userRole = localStorage.getItem("role");
-    setRole(userRole);
-  }, []);
 
   const handleAddHotel = () => {
     navigate('/add_hotel');
@@ -59,15 +57,43 @@ const HotelComponent = () => {
     navigate(`/hotel/${hotelId}`);
   };
 
-  // const handleDeleteHotel = (hotelId) => {
-    //const updatedHotels = hotelData.filter((hotel) => hotel.id !== hotelId);
-    //setHotelData(updatedHotels);
- // };
+  const handleDeleteHotel = (hotelId) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:8000/hotel/${hotelId}`)
+          .then(() => {
+            setHotels((prevHotels) => prevHotels.filter((hotel) => hotel._id !== hotelId));
+            Swal.fire('Deleted!', 'Hotel has been deleted.', 'success');
+          })
+          .catch((error) => {
+            console.error("Error deleting hotel:", error);
+            Swal.fire('Error', 'Failed to delete hotel', 'error');
+          });
+      }
+    });
+  };
 
   return (
     <>
       <NavBar />
-      <div className="container mt-5">
+      <div className="container mt-5">      
+        <div className="mb-4" style={{ width:"30%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search hotels by name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="m-auto">Hotel Listings</h2>
 
@@ -80,39 +106,48 @@ const HotelComponent = () => {
 
         <div className="row">
           {currentHotels.map((hotel) => (
-            <div key={hotel.id} className="col-md-4 mb-4">
-              <div className="card">
-                <img src={hotel.image} className="card-img-top" alt={hotel.name} />
-                <div className="card-body">
+            <div key={hotel._id} className="col-md-4 mb-4">
+              <div className="card h-100">
+                <img
+                  src={hotel.image_url}
+                  className="card-img-top"
+                  alt={hotel.name}
+                  style={{ height: '200px', objectFit: 'cover' }}
+                />
+                <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{hotel.name}</h5>
-                  <p className="card-text">{hotel.description}</p>
-                  <p className="card-text"><strong>{hotel.price}</strong></p>
-
-                  {role === "admin" && (
-                    <>
-                        <button className="btn btn-warning me-2" onClick={() => navigate(`/update_hotel/${hotel.id}`)}>
-                        Update Hotel
+                  <p className="card-text">{hotel.location}</p>
+                  <p className="card-text">
+                    <strong>Single:</strong> €{hotel.price_per_single_room} <br />
+                    <strong>Double:</strong> €{hotel.price_per_double_room} <br />
+                    <strong>Large:</strong> €{hotel.price_per_large_room}
+                  </p>
+                  <div className="mt-auto">
+                    {role === "admin" && (
+                      <>
+                        <button
+                          className="btn btn-warning me-2"
+                          onClick={() => navigate(`/update_hotel/${hotel._id}`)}
+                        >
+                          Update Hotel
                         </button>
-
-                        <button className="btn btn-danger">Delete Hotel</button>
-                    </>
-                  )}
-                  {role === "user" && (
-                    <>
-                     <button className="btn btn-warning me-2" onClick={() => navigate(`/hotel/${hotel.id}`)}>
-                     View
-                     </button>
-
-                      <button className="btn btn-primary">Book</button>
-                    </>
-                  )}
+                        <button className="btn btn-danger" onClick={() => handleDeleteHotel(hotel._id)}>Delete Hotel</button>
+                      </>
+                    )}
+                    {role === "user" && (
+                      <button className="btn btn-primary" onClick={() => handleViewHotel(hotel._id)}>
+                        View
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="d-flex justify-content-between">
+        {/* Pagination controls */}
+        <div className="d-flex justify-content-between mt-4">
           <button onClick={handlePrev} className="btn btn-secondary" disabled={currentPage === 1}>
             Previous
           </button>

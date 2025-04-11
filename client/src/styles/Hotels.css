@@ -50,7 +50,7 @@ h2 {
   border-radius: 10px 10px 0 0;
   object-fit: cover;
   height: 200px;
-  filter: grayscale(100%); /* Apply black and white filter */
+  filter: grayscale(50%); /* Apply black and white filter */
   transition: transform 0.4s ease-in-out;
 }
 

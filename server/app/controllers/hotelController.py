@@ -50,14 +50,25 @@ def get_hotel_by_id(hotel_id: str):
         return hot
     return {"error": "Hotel not found"}
 
-def update_hotel(hotel_id: str, hotel: Hotel):
+def update_hotel(hotel_id: str, hotel: Hotel, image_file: Optional[UploadFile] = None):
+    hotel_dict = hotel.dict()
+
+    if image_file:
+        try:
+            image_url = upload_image_to_firebase(image_file)
+            hotel_dict["image_url"] = image_url
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
+
     updated = db.hotels.update_one(
         {"_id": ObjectId(hotel_id)},
-        {"$set": hotel.dict()}
+        {"$set": hotel_dict}
     )
+
     if updated.modified_count:
         return {"message": "Hotel updated successfully"}
     return {"message": "No changes made or hotel not found"}
+
 
 def delete_hotel(hotel_id: str):
     deleted = db.hotels.delete_one({"_id": ObjectId(hotel_id)})

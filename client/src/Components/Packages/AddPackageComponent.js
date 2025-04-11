@@ -73,7 +73,7 @@ const AddPackageComponent = () => {
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <div className="card shadow p-4" style={{ maxWidth: '700px', width: '100%',marginTop: '5rem', marginBottom: '4rem' }}>
-        <h2 className="mb-4 text-center text-primary">Add a New Hotel</h2>
+        <h2 className="mb-4 text-center text-primary">Add a New Package</h2>
 
         <form onSubmit={handleSubmit}>
           {[

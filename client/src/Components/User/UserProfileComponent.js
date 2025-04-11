@@ -17,11 +17,7 @@ const UserProfileComponent = () => {
       return;
     }
 
-    axios.get(`http://localhost:8000/users/${user_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    axios.get(`http://localhost:8000/users/${user_id}`)
     .then((res) => {
       setUser(res.data);
     })
