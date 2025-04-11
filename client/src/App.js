@@ -10,6 +10,7 @@ import HotelPage from './Components/Hotels/HotelComponent';
 import AddHotelPage from './Components/Hotels/AddHotelPage';
 import HotelDetails from './Components/Hotels/HotelDetails';
 import UpdateHotelComponent from './Components/Hotels/UpdateHotelComponent';
+import ProfilePage from './Components/User/UserProfileComponent';
 
 function App() {
   return (
@@ -57,6 +58,13 @@ function App() {
          element={
          <UpdateHotelComponent />
          }
+        />
+        <Route path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
         />
         
         {/* 404 error */}
