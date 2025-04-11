@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../NavBar';
-import '../../styles/Hotels.css'; // Optional: If you want to add custom styling
+import '../../styles/Hotels.css';
+import { useNavigate } from 'react-router-dom';
 
 const HotelComponent = () => {
   // Dummy hotel data for now
@@ -22,6 +23,7 @@ const HotelComponent = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 9;
+  const navigate = useNavigate();
 
   // Calculate current hotels to show
   const indexOfLastHotel = currentPage * hotelsPerPage;
@@ -50,6 +52,10 @@ const HotelComponent = () => {
     setRole(userRole);
   }, []);
 
+  const handleAddHotel = () => {
+    navigate('/add_hotel');
+  };
+
   return (
     <>
       <NavBar />
@@ -57,7 +63,7 @@ const HotelComponent = () => {
         <h2 className="text-center mb-4">Hotel Listings</h2>
         {role === "admin" && (
                     <>
-                        <button className="btn btn-primary">Add Hotel</button>
+                        <button className="btn btn-primary" onClick={handleAddHotel}>Add Hotel</button>
                     </>
         )}
 
