@@ -82,8 +82,6 @@ const AddHotelComponent = () => {
             { label: 'Price (Single Room)', name: 'price_per_single_room', type: 'number' },
             { label: 'Price (Double Room)', name: 'price_per_double_room', type: 'number' },
             { label: 'Price (Large Room)', name: 'price_per_large_room', type: 'number' },
-            { label: 'Start Date', name: 'start_date', type: 'date' },
-            { label: 'End Date', name: 'end_date', type: 'date' },
             { label: 'Location', name: 'location', type: 'text' },
           ].map(({ label, name, type }) => (
             <div className="mb-3" key={name}>

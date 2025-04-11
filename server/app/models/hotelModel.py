@@ -7,7 +7,5 @@ class Hotel(BaseModel):
     price_per_single_room: float
     price_per_double_room: float
     price_per_large_room: float
-    start_date: str
-    end_date: str
     location: str
-    image_url: Optional[str] = None  # Add image_url field
+    image_url: Optional[str] = None
