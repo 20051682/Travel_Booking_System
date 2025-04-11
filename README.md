@@ -11,7 +11,8 @@ pip install -r requirements.txt
 pip install passlib[bcrypt]
 pip install python-jose
 pip install pydantic[email]
-
+pip install firebase-admin
+pip install python-multipart
 
 
 run the server
