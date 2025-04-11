@@ -19,6 +19,8 @@ const NavBar = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('user_info');
         navigate('/login');
       }
     });
