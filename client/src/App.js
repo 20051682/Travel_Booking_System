@@ -13,6 +13,7 @@ import Packages from './Components/Packages/Packages';
 import UpdateHotelComponent from './Components/Hotels/UpdateHotelComponent';
 import ProfilePage from './Components/User/UserProfileComponent';
 import AddPackage from './Components/Packages/AddPackagePage';
+import UpdateUserComponent from './Components/User/UpdateUserComponent';
 
 function App() {
   return (
@@ -58,7 +59,9 @@ function App() {
         /> 
         <Route path="/update_hotel/:hotelId"
          element={
-         <UpdateHotelComponent />
+          <PrivateRoute>
+            <UpdateHotelComponent />
+          </PrivateRoute>
          }
         />
         <Route path="/profile"
@@ -80,6 +83,13 @@ function App() {
           element={
             <PrivateRoute>
               <AddPackage />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/edit-profile"
+          element={
+            <PrivateRoute>
+              <UpdateUserComponent />
             </PrivateRoute>
           }
         />

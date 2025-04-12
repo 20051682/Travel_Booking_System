@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { FaUserCircle } from 'react-icons/fa'; // User icon
 import logo from '../images/logo2.jpeg';
 
 const NavBar = () => {
@@ -26,18 +27,22 @@ const NavBar = () => {
     });
   };
 
+  const goToProfile = () => {
+    navigate('/profile');
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-        <a className="navbar-brand" href="/home">
+      <a className="navbar-brand" href="/home">
         <img
-            src={logo}
-            alt="Logo"
-            width="40"
-            height="40"
-            className="d-inline-block align-top me-2"
+          src={logo}
+          alt="Logo"
+          width="40"
+          height="40"
+          className="d-inline-block align-top me-2"
         />
         <span style={{ marginTop: '5px', display: 'inline-block' }}>AHP Travels</span>
-        </a>
+      </a>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span className="navbar-toggler-icon"></span>
       </button>
@@ -56,11 +61,21 @@ const NavBar = () => {
           <li className="nav-item">
             <a className={`nav-link ${location.pathname === '/hotels' ? 'active' : ''}`} href="/hotels">Hotels</a>
           </li>
-          <li className="nav-item">
-            <a className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`} href="/profile">Profile</a>
-          </li>
         </ul>
-        <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
+
+        <div className="d-flex align-items-center mb-3">
+          <button
+            className="btn btn-link text-light me-3 d-flex align-items-center"
+            onClick={goToProfile}
+            style={{ textDecoration: 'none' }}
+          >
+            <FaUserCircle size={24} className="me-1" />
+            Profile
+          </button>
+          <button className="btn btn-outline-light" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );
