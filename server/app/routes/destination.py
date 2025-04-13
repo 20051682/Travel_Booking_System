@@ -1,5 +1,5 @@
 # app/routes/destinationRoutes.py
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile, Form
 from app.models.destinationModel import Destination
 from app.controllers.destinationController import (
     create_destination,
@@ -13,8 +13,16 @@ router = APIRouter()
 
 # Create a destination
 @router.post("/destination")
-def add_destination(destination: Destination):
-    return create_destination(destination)
+async def add_destination(
+    name: str = Form(...),
+    description: str = Form(...),
+    image_file: UploadFile = File(None)
+):
+    destination = Destination(
+        name=name,
+        description=description,
+    )
+    return create_destination(destination, image_file)
 
 # Read all destinations
 @router.get("/destinations")
@@ -28,8 +36,17 @@ def get_destination(destination_id: str):
 
 # Update a destination by ID
 @router.put("/destination/{destination_id}")
-def modify_destination(destination_id: str, destination: Destination):
-    return update_destination(destination_id, destination)
+async def modify_destination(
+    destination_id: str,
+    name: str = Form(...),
+    description: str = Form(...),
+    image_file: UploadFile = File(None)
+):
+    destination = Destination(
+        name=name,
+        description=description,
+    )
+    return update_destination(destination_id, destination, image_file)
 
 # Delete a destination by ID
 @router.delete("/destination/{destination_id}")

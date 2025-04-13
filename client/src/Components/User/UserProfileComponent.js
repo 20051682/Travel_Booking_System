@@ -36,7 +36,7 @@ const UserProfileComponent = () => {
   const handleDelete = () => {
     const user_info = JSON.parse(localStorage.getItem("user_info"));
     const user_id = user_info.id;
-    
+
     Swal.fire({
       title: 'Are you sure?',
       text: "This action will permanently delete your account!",
@@ -67,7 +67,7 @@ const UserProfileComponent = () => {
   };
 
   const handleEdit = () => {
-    navigate('/edit-profile');
+    navigate('/edit_profile');
   };
 
   return (

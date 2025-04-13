@@ -1,83 +1,462 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bookingModel } from '../../Models/bookingModel';
-import { submitBookingForm } from '../../Controllers/bookingController';
+import { submitBookingForm, getUserBookings, getAllBookings } from '../../Controllers/bookingController';
 import '../../styles/BookingForm.css';
 import NavBar from '../NavBar'
-
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { Modal, Button, Card, Row, Col, Form, Container, InputGroup, FormControl } from 'react-bootstrap';
+import { deleteDestination, fetchDestinations } from '../../Controllers/destinationController';
 
 const BookingForm = () => {
   const [formData, setFormData] = useState(bookingModel);
+  const [destinations, setDestinations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [bookingsModal, setBookingsModal] = useState(false);
+  const [userBookings, setUserBookings] = useState([]);
+  const [role, setRole] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [formErrors, setFormErrors] = useState({});
+  const [adminBookings, setAdminBookings] = useState([]);
+
+  const itemsPerPage = 6;
+  const user_id = JSON.parse(localStorage.getItem("user_info")).id;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("role");
+    setRole(userRole);
+
+    if (userRole === "admin") {
+      getAllBookings().then(setAdminBookings);
+    }
+
+    const getDestinations = async () => {
+      try {
+        const data = await fetchDestinations();
+        setDestinations(data);
+      } catch (error) {
+        console.error("Failed to load destinations");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getDestinations();
+  }, []);
+
+  const navigateToAddDestination = () => {
+    navigate('/add_destination');
+  };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    const updatedFormData = { ...formData, user_id, [name]: value };
+    const errors = { ...formErrors };
+  
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+  
+    if (name === 'location_to' && value === formData.location_from) {
+      errors.location_to = 'Destination cannot be the same as origin.';
+    } else if (name === 'location_to') {
+      delete errors.location_to;
+    }
+  
+    if (name === 'start_date') {
+      const startDate = new Date(value);
+      startDate.setHours(0, 0, 0, 0);
+      if (startDate < today) {
+        errors.start_date = 'Start date cannot be in the past.';
+      } else {
+        delete errors.start_date;
+      }
+  
+      // Also check end_date if it's already filled
+      if (formData.end_date) {
+        const endDate = new Date(formData.end_date);
+        endDate.setHours(0, 0, 0, 0);
+        if (endDate < startDate) {
+          errors.end_date = 'End date cannot be before start date.';
+        } else {
+          delete errors.end_date;
+        }
+      }
+    }
+  
+    if (name === 'end_date') {
+      const endDate = new Date(value);
+      endDate.setHours(0, 0, 0, 0);
+      const startDate = new Date(updatedFormData.start_date);
+      startDate.setHours(0, 0, 0, 0);
+  
+      if (endDate < today) {
+        errors.end_date = 'End date cannot be in the past.';
+      } else if (endDate < startDate) {
+        errors.end_date = 'End date cannot be before start date.';
+      } else {
+        delete errors.end_date;
+      }
+    }
+  
+    if (name === 'trip_type' && value === 'round' && !formData.end_date) {
+      errors.end_date = 'End date is required for round trips.';
+    } else if (name === 'trip_type' && value === 'oneway') {
+      delete errors.end_date; // if user switches back to one-way
+      updatedFormData.end_date = '';
+    }
+  
+    setFormErrors(errors);
+    setFormData(updatedFormData);
+  };
+  
+  const fetchUserBookings = async () => {
+    const bookings = await getUserBookings(user_id);
+    setUserBookings(bookings);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
-    
+
+    const errors = {};
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+  
+    const startDate = new Date(formData.start_date);
+    startDate.setHours(0, 0, 0, 0);
+  
+    if (!formData.start_date) {
+      errors.start_date = 'Start date is required.';
+    } else if (startDate < today) {
+      errors.start_date = 'Start date cannot be in the past.';
+    }
+  
+    if (formData.end_date) {
+      const endDate = new Date(formData.end_date);
+      endDate.setHours(0, 0, 0, 0);
+      if (endDate < today) {
+        errors.end_date = 'End date cannot be in the past.';
+      } else if (endDate < startDate) {
+        errors.end_date = 'End date cannot be before start date.';
+      }
+    }
+  
+    if (formData.trip_type === 'round' && !formData.end_date) {
+      errors.end_date = 'End date is required for round trips.';
+    }
+  
+    if (formData.location_from === formData.location_to) {
+      errors.location_to = 'Destination cannot be the same as origin.';
+    }
+  
+    setFormErrors(errors);
+  
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
     const result = await submitBookingForm(formData);
     if (result) {
-      alert('Booking submitted successfully!');
-      setFormData(bookingModel); // Reset the form
+      Swal.fire({
+        icon: 'success',
+        title: 'Booking submitted successfully!',
+        text: 'Enjoy your travel!',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      setFormData(bookingModel);
     } else {
-      alert('Error submitting booking');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error submitting booking! Please try again!',
+      });
+
     }
   };
 
-  return (
-  <>
-    <NavBar/>
+  const filteredDestinations = destinations.filter((d) =>
+    d.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    <div className="booking-form">
-      <h2>Book Your Trip</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Date:
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Destination:
-          <input
-            type="text"
-            name="destination"
-            value={formData.destination}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <button type="submit">Submit Booking</button>
-      </form>
-    </div>
+  const paginatedDestinations = filteredDestinations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleDelete = async (destinationId) => {
+    try {
+      await deleteDestination(destinationId);
+      const updatedData = await fetchDestinations();
+      setDestinations(updatedData);
+    } catch (error) {
+      console.error("Failed to delete or refresh", error);
+    }
+  };
+  
+
+  if (loading) return <p>Loading...</p>;
+
+  return (
+    <>
+      <NavBar />
+      <Container className="mt-4">
+        <Row>
+          {role === "user" && (
+            <Col md={6} className="mb-4">
+              <h3>Book Your Trip</h3>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Location From</Form.Label>
+                  <Form.Select name="location_from" value={formData.location_from} onChange={handleChange} required>
+                    <option value="">Select starting location</option>
+                    {destinations.map((destination) => (
+                      <option key={destination.name} value={destination.name}>
+                        {destination.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                <Form.Label>Location To</Form.Label>
+                  <Form.Select
+                    name="location_to"
+                    value={formData.location_to}
+                    onChange={handleChange}
+                    isInvalid={!!formErrors.location_to}
+                    required
+                  >
+                    <option value="">Select destination</option>
+                    {destinations.map((destination) => (
+                      <option key={destination.name} value={destination.name}>
+                        {destination.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.location_to}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Start Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="start_date"
+                    value={formData.start_date}
+                    onChange={handleChange}
+                    isInvalid={!!formErrors.start_date}
+                    required
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.start_date}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>End Date (Only for Round Trip)</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="end_date"
+                    value={formData.end_date || ''}
+                    onChange={handleChange}
+                    isInvalid={!!formErrors.end_date}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.end_date}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Passengers</Form.Label>
+                  <Form.Control type="number" name="passengers" value={formData.passengers} onChange={handleChange} min="1" required />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Trip Type</Form.Label>
+                  <Form.Select name="trip_type" value={formData.trip_type} onChange={handleChange} required>
+                    <option value="">Select trip type</option>
+                    <option value="oneway">One Way</option>
+                    <option value="round">Round Trip</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Mode</Form.Label>
+                  <Form.Select name="mode" value={formData.mode} onChange={handleChange} required>
+                    <option value="">Select mode</option>
+                    <option value="bus">Bus</option>
+                    <option value="car">Car</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Button variant="primary" type="submit">Submit Booking</Button>
+                <Button variant="secondary" className="ms-3"
+                  onClick={() => {
+                    fetchUserBookings();
+                    setBookingsModal(true);
+                  }}
+                >
+                  My Bookings
+                </Button>
+
+              </Form>
+
+            </Col>
+          )}
+
+          {role === "admin" && (
+            <Col md={6} className="mb-4">
+              <h3>Booking Management</h3>
+
+              {adminBookings.length === 0 ? (
+                <p>No bookings available.</p>
+              ) : (
+                <div className="table-responsive">
+                  <table className="table table-bordered table-hover">
+                    <thead className="table-light">
+                      <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Passengers</th>
+                        <th>Type</th>
+                        <th>Mode</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {adminBookings.map((booking, index) => (
+                        <tr key={booking._id}>
+                          <td>{index + 1}</td>
+                          <td>{booking.user_name || booking.user_id}</td>
+                          <td>{booking.location_from}</td>
+                          <td>{booking.location_to}</td>
+                          <td>{booking.start_date}</td>
+                          <td>{booking.end_date || '-'}</td>
+                          <td>{booking.passengers}</td>
+                          <td>{booking.trip_type}</td>
+                          <td>{booking.mode}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Col>
+          )}
+
+
+          <Col md={6} className="mb-4">
+          <Row className="align-items-center mb-3">
+            <Col>
+              <h4>Search Destination</h4>
+            </Col>
+            <Col className="text-end">
+              {role === "admin" && (
+                <Button variant="info"
+                onClick={() => {
+                  navigateToAddDestination();
+                }}
+                >Add Destination</Button>
+              )}
+            </Col>
+          </Row>
+
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="Search by name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </InputGroup>
+
+            <Row className="flex-column">
+              {paginatedDestinations.map((destination) => (
+                <Col key={destination._id} className="mb-3">
+                  <Card className="d-flex flex-row align-items-center">
+                    <Card.Img
+                      variant="left"
+                      src={destination.image_url}
+                      style={{ width: '150px', height: '100px', objectFit: 'cover', marginLeft: "1rem" }}
+                    />
+
+                    <Card.Body>
+                      <Card.Title>{destination.name}</Card.Title>
+                      <Card.Text>{destination.description}</Card.Text>
+
+                      {role === "user" && (
+                        <Button variant="info">View</Button>
+                      )}
+
+                      {role === "admin" && (
+                        <div className="d-flex gap-2">
+                          <Button variant="warning" onClick={() => navigate(`/update_destination/${destination._id}`)}>
+                            Update
+                          </Button>
+                          <Button variant="danger" onClick={() => handleDelete(destination._id)}>
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </Card.Body>
+
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+
+            <div className="d-flex justify-content-between mt-3">
+              <Button
+                variant="outline-secondary"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline-secondary"
+                onClick={() => setCurrentPage((prev) =>
+                  prev * itemsPerPage < filteredDestinations.length ? prev + 1 : prev
+                )}
+                disabled={currentPage * itemsPerPage >= filteredDestinations.length}
+              >
+                Next
+              </Button>
+            </div>
+          </Col>
+        </Row>
+
+        <Modal show={bookingsModal} onHide={() => setBookingsModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>My Bookings</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          {userBookings.length === 0 ? (
+            <p>No bookings yet.</p>
+          ) : (
+            <ul className="list-group">
+              {userBookings.map((booking, index) => (
+                <li className="list-group-item" key={index}>
+                  <strong>{booking.location_from} → {booking.location_to}</strong><br />
+                  Mode: {booking.mode} | Passengers: {booking.passengers}<br />
+                  Date: {booking.start_date} {booking.end_date && `to ${booking.end_date}`}
+                </li>
+              ))}
+            </ul>
+          )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setBookingsModal(false)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Container>
     </>
   );
 };
