@@ -109,3 +109,8 @@ def delete_booking(booking_id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Booking not found")
     return {"message": "Booking deleted successfully"}
+
+def get_bookings_by_user(user_id: str):
+    bookings = db.booking.find({"user_id": user_id})
+    return [dict(item, _id=str(item["_id"])) for item in bookings]
+
