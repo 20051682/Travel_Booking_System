@@ -32,7 +32,8 @@ def create_destination(destination: Destination, image_file: Optional[UploadFile
         "destination": {
             "id": str(result.inserted_id),
             "name": destination.name,
-            "image_url": destination_dict.get("image_url")
+            "image_url": destination_dict.get("image_url"),
+            "url": destination.url,
         }
     }
 

@@ -37,6 +37,7 @@ const AddDestinationComponent = () => {
           {[
             { label: 'Name', name: 'name', type: 'text' },
             { label: 'Description', name: 'description', type: 'text' },
+            { label: 'Wikipedia Url', name: 'url', type: 'text' },
           ].map(({ label, name, type }) => (
             <div className="mb-3" key={name}>
               <label className="form-label">{label}:</label>
