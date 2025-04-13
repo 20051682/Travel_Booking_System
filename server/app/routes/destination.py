@@ -16,11 +16,13 @@ router = APIRouter()
 async def add_destination(
     name: str = Form(...),
     description: str = Form(...),
+    url: str = Form(...),
     image_file: UploadFile = File(None)
 ):
     destination = Destination(
         name=name,
         description=description,
+        url=url,
     )
     return create_destination(destination, image_file)
 

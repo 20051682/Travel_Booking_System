@@ -1,7 +1,8 @@
 const DestinationModel = {
     name: '',
     description: '',
-    image: null
+    image: null,
+    url: ''
   };
   
   export default DestinationModel;
