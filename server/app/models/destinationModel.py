@@ -4,6 +4,7 @@ from typing import Optional
 class Destination(BaseModel):
     name: str
     description: str
+    url: str
     image_url: Optional[str] = None
 
 
