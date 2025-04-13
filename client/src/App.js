@@ -13,6 +13,9 @@ import Packages from './Components/Packages/Packages';
 import UpdateHotelComponent from './Components/Hotels/UpdateHotelComponent';
 import ProfilePage from './Components/User/UserProfileComponent';
 import AddPackage from './Components/Packages/AddPackagePage';
+import UpdateUserComponent from './Components/User/UpdateUserComponent';
+import AddDestinationComponent from './Components/Booking/AddDestinationComponent';
+import UpdateDestinationComponent from './Components/Booking/UpdateDestinationComponent'
 
 function App() {
   return (
@@ -58,7 +61,9 @@ function App() {
         /> 
         <Route path="/update_hotel/:hotelId"
          element={
-         <UpdateHotelComponent />
+          <PrivateRoute>
+            <UpdateHotelComponent />
+          </PrivateRoute>
          }
         />
         <Route path="/profile"
@@ -80,6 +85,28 @@ function App() {
           element={
             <PrivateRoute>
               <AddPackage />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/edit_profile"
+          element={
+            <PrivateRoute>
+              <UpdateUserComponent />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/add_destination"
+          element={
+            <PrivateRoute>
+              <AddDestinationComponent />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/update_destination/:destinationId"
+          element={
+            <PrivateRoute>
+              <UpdateDestinationComponent />
             </PrivateRoute>
           }
         />

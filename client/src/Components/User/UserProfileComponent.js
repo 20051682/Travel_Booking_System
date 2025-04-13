@@ -6,7 +6,13 @@ import NavBar from '../NavBar';
 
 const UserProfileComponent = () => {
   const [user, setUser] = useState({});
+  const [role, setRole] = useState("");
   const navigate = useNavigate();
+      
+  useEffect(() => {
+      const userRole = localStorage.getItem("role");
+      setRole(userRole);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -28,6 +34,9 @@ const UserProfileComponent = () => {
   }, [navigate]);
 
   const handleDelete = () => {
+    const user_info = JSON.parse(localStorage.getItem("user_info"));
+    const user_id = user_info.id;
+
     Swal.fire({
       title: 'Are you sure?',
       text: "This action will permanently delete your account!",
@@ -39,7 +48,7 @@ const UserProfileComponent = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const token = localStorage.getItem('token');
-        axios.delete('http://localhost:8000/user/delete', {
+        axios.delete(`http://localhost:8000/users/${user_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,7 +67,7 @@ const UserProfileComponent = () => {
   };
 
   const handleEdit = () => {
-    navigate('/edit-profile');
+    navigate('/edit_profile');
   };
 
   return (
@@ -71,7 +80,9 @@ const UserProfileComponent = () => {
           <p><strong>Last Name:</strong> {user.last_name}</p>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Number:</strong> {user.number}</p>
-          <p><strong>Role:</strong> {user.role}</p>
+          {role === "admin" && (
+            <p><strong>Role:</strong> {user.role}</p>
+          )}
 
           <div className="mt-3">
             <button className="btn btn-primary me-3" onClick={handleEdit}>Edit Profile</button>

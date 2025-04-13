@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 from app.models.bookingModel import Booking
-from app.controllers.bookingController import create_booking, get_all_bookings, get_booking_by_id, update_booking, reject_booking_update, approve_booking_update, delete_booking
+from app.controllers.bookingController import create_booking, get_all_bookings,get_booking_by_id, update_booking, reject_booking_update, approve_booking_update, delete_booking, get_bookings_by_user
 
 router = APIRouter()
 
@@ -31,3 +31,8 @@ def reject_update(booking_id: str, reason: str = Body("No reason provided")):
 @router.delete("/booking/{booking_id}")
 def delete_booking_record(booking_id: str):
     return delete_booking(booking_id)
+
+@router.get("/bookings/user/{user_id}")
+def get_bookings_for_user(user_id: str):
+    return get_bookings_by_user(user_id)
+
