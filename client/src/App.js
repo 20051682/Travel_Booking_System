@@ -17,6 +17,7 @@ import UpdateUserComponent from './Components/User/UpdateUserComponent';
 import AddDestinationComponent from './Components/Booking/AddDestinationComponent';
 import UpdateDestinationComponent from './Components/Booking/UpdateDestinationComponent'
 
+
 function App() {
   return (
     <Router>
@@ -116,6 +117,7 @@ function App() {
       </Routes>
     </Router>
   );
-}
+  };
 
 export default App;
+
