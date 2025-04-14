@@ -32,4 +32,32 @@ export const getAllBookings = async () => {
   }
 };
 
+export const getBookingById = async (bookingId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/booking/${bookingId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching booking:', error);
+    return null;
+  }
+};
 
+export const cancelBooking = async (bookingId) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/booking/${bookingId}/cancel`);
+    return response.data;
+  } catch (error) {
+    console.error('Cancel booking failed:', error);
+    throw error;
+  }
+};
+
+export const updateBooking = async (bookingId, formData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/booking/${bookingId}`, formData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating booking:', error);
+    throw error;
+  }
+};

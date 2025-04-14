@@ -13,7 +13,7 @@ pip install python-jose
 pip install pydantic[email]
 pip install firebase-admin
 pip install python-multipart
-
+pip install beautifulsoup4 requests
 
 run the server
 

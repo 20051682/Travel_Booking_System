@@ -17,6 +17,8 @@ import UpdateUserComponent from './Components/User/UpdateUserComponent';
 import AddDestinationComponent from './Components/Booking/AddDestinationComponent';
 import UpdateDestinationComponent from './Components/Booking/UpdateDestinationComponent'
 import PaymentPage from './Components/Booking/PaymentPage';
+import BookingDetails from './Components/Booking/BookingDetails';
+import UpdateBooking from './Components/Booking/UpdateBooking';
 
 function App() {
   return (
@@ -116,6 +118,22 @@ function App() {
           element={
             <PrivateRoute>
               <PaymentPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/booking/:bookingId"
+          element={
+            <PrivateRoute>
+              <BookingDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/booking/:bookingId/update"
+          element={
+            <PrivateRoute>
+              <UpdateBooking />
             </PrivateRoute>
           }
         />

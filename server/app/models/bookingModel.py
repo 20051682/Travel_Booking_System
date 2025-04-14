@@ -3,6 +3,8 @@ from typing import Optional
 
 class Booking(BaseModel):
     user_id: str
+    username: str
+    email: str
     location_from: str
     location_to: str
     start_date: str
@@ -15,4 +17,5 @@ class Booking(BaseModel):
     total_price: Optional[float] = None
     payment_status: str = "pending"
     booking_status: str = "pending"
+    status: str = "Approved"
 

@@ -6,5 +6,5 @@ class Destination(BaseModel):
     description: str
     url: str
     image_url: Optional[str] = None
-
+    web_description: Optional[str] = None
 
