@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from app.models.bookingModel import Booking
 from app.database.mongodb import db
 from bson.objectid import ObjectId
+from app.utils.email_utils import send_payment_email
 
 load_dotenv()
 
@@ -42,11 +43,11 @@ async def create_booking(booking: Booking, mode: str = "car"):
     distance_km = round(data["distances"][0][1] / 1000, 2)
     duration_min = round(data["durations"][0][1] / 60, 2)
 
-    price_per_km = 0.10 if mode == "car" else 0.05
+    price_per_km = 0.30 if mode == "car" else 0.15
     total_price = round(distance_km * price_per_km * booking.passengers, 2)
 
     if booking.trip_type == "round":
-        total_price *= 2  # Double the price for round trips
+        total_price *= 2
 
     booking_dict = booking.dict()
     booking_dict.update({
@@ -54,14 +55,21 @@ async def create_booking(booking: Booking, mode: str = "car"):
         "distance_km": distance_km,
         "duration_min": duration_min,
         "total_price": total_price,
-        "status": "pending"  # Default status to 'pending' until approved
+        "payment_status": "pending",
+        "booking_status": "pending"
     })
 
     result = db.booking.insert_one(booking_dict)
+    # Fetch the full document after inserting
+    saved_booking = db.booking.find_one({"_id": result.inserted_id})
+
+    # Convert ObjectId to string for JSON response
+    saved_booking["_id"] = str(saved_booking["_id"])
+
     return {
         "message": "Booking successful",
         "booking_id": str(result.inserted_id),
-        "price": total_price
+        "booking_details": saved_booking
     }
 
 
@@ -113,4 +121,44 @@ def delete_booking(booking_id: str):
 def get_bookings_by_user(user_id: str):
     bookings = db.booking.find({"user_id": user_id})
     return [dict(item, _id=str(item["_id"])) for item in bookings]
+
+def cancel_booking(booking_id: str):
+    result = db.booking.update_one(
+        {"_id": ObjectId(booking_id)},
+        {"$set": {"booking_status": "canceled"}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    return {"message": "Booking canceled successfully"}
+
+async def pay_booking_update(booking_id: str):
+    # First, update the payment & booking status
+    result = db.booking.update_one(
+        {"_id": ObjectId(booking_id)},
+        {"$set": {"payment_status": "paid", "booking_status": "booked"}}
+    )
+
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Booking not found or already paid")
+
+    # Fetch updated booking to get email and other info
+    booking = db.booking.find_one({"_id": ObjectId(booking_id)})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found after update")
+
+    # Get the email directly from the booking
+    email = booking.get("email")
+    
+    if email:
+        print("This is email:", email)
+        # Send the payment email to the user's email
+        # send_payment_email(to_email=email, booking_data=booking)
+        send_payment_email(to_email=email, booking_data=booking)
+    else:
+        # Handle the case where the email is missing in the booking
+        print(f"Booking with ID {booking_id} does not have an email.")
+        # You could also raise an exception or return an error message if necessary
+        
+    return {"message": "Payment successful and confirmation email sent"}
+
 

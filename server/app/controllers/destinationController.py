@@ -5,6 +5,33 @@ from typing import Optional
 from fastapi import HTTPException, UploadFile
 from firebase_admin import storage
 from app.firebase import firebase_config
+import requests
+from bs4 import BeautifulSoup
+
+# Web scraping function to fetch description from Wikipedia
+def scrape_wikipedia_description(url: str) -> Optional[str]:
+    try:
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise HTTPException(status_code=400, detail="Failed to fetch the Wikipedia page")
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # Find all <p> tags
+        all_p_tags = soup.find_all('p')
+
+        # Get the second <p> tag if it exists
+        if len(all_p_tags) >= 2:
+            second_p = all_p_tags[1]
+            return second_p.text.strip()
+        elif len(all_p_tags) >= 1:
+            # return first if second is not available
+            return all_p_tags[0].text.strip()
+        else:
+            return None
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error scraping the URL {url}: {e}")
 
 def upload_image_to_firebase(image_file: UploadFile):
     file_name = f"destinations/{image_file.filename}"
@@ -16,8 +43,15 @@ def upload_image_to_firebase(image_file: UploadFile):
 
     return blob.public_url
 
+
 def create_destination(destination: Destination, image_file: Optional[UploadFile] = None):
     destination_dict = destination.dict()
+
+    # Scrape the description
+    if destination.url:
+        web_description = scrape_wikipedia_description(destination.url)
+        if web_description:
+            destination_dict["web_description"] = web_description
 
     if image_file:
         try:
@@ -34,6 +68,7 @@ def create_destination(destination: Destination, image_file: Optional[UploadFile
             "name": destination.name,
             "image_url": destination_dict.get("image_url"),
             "url": destination.url,
+            "web_description": destination_dict.get("web_description"),  # Include the web description
         }
     }
 
@@ -61,6 +96,12 @@ def update_destination(dest_id: str, destination: Destination, image_file: Optio
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
 
+    # Scrape the description if a URL is provided
+    if destination.url:
+        web_description = scrape_wikipedia_description(destination.url)
+        if web_description:
+            destination_dict["web_description"] = web_description
+            
     updated = db.destination.update_one(
         {"_id": ObjectId(dest_id)},
         {"$set": destination_dict}
