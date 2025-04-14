@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from app.models.bookingModel import Booking
 from app.database.mongodb import db
 from bson.objectid import ObjectId
+from app.utils.email_utils import send_payment_email
 
 load_dotenv()
 
@@ -121,7 +122,17 @@ def get_bookings_by_user(user_id: str):
     bookings = db.booking.find({"user_id": user_id})
     return [dict(item, _id=str(item["_id"])) for item in bookings]
 
+def cancel_booking(booking_id: str):
+    result = db.booking.update_one(
+        {"_id": ObjectId(booking_id)},
+        {"$set": {"booking_status": "canceled"}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    return {"message": "Booking canceled successfully"}
+
 async def pay_booking_update(booking_id: str):
+    # First, update the payment & booking status
     result = db.booking.update_one(
         {"_id": ObjectId(booking_id)},
         {"$set": {"payment_status": "paid", "booking_status": "booked"}}
@@ -130,4 +141,24 @@ async def pay_booking_update(booking_id: str):
     if result.modified_count == 0:
         raise HTTPException(status_code=404, detail="Booking not found or already paid")
 
-    return {"message": "Payment successful"}
+    # Fetch updated booking to get email and other info
+    booking = db.booking.find_one({"_id": ObjectId(booking_id)})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found after update")
+
+    # Get the email directly from the booking
+    email = booking.get("email")
+    
+    if email:
+        print("This is email:", email)
+        # Send the payment email to the user's email
+        # send_payment_email(to_email=email, booking_data=booking)
+        send_payment_email(to_email=email, booking_data=booking)
+    else:
+        # Handle the case where the email is missing in the booking
+        print(f"Booking with ID {booking_id} does not have an email.")
+        # You could also raise an exception or return an error message if necessary
+        
+    return {"message": "Payment successful and confirmation email sent"}
+
+

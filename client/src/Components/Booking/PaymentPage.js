@@ -59,7 +59,7 @@ const PaymentPage = () => {
 
       <div className="button-group">
         <button onClick={handlePayment}>Pay Now</button>
-        <button onClick={() => navigate('/')}>Do it Later</button>
+        <button onClick={() => navigate('/bookings')}>Do it Later</button>
       </div>
     </div>
   );

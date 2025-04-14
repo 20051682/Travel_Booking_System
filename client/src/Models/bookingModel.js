@@ -1,5 +1,7 @@
 export const bookingModel = {
   user_id: '',
+  username: '',
+  email: '',
   location_from: '',
   location_to: '',
   start_date: '',

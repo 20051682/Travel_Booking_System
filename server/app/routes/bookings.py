@@ -2,7 +2,8 @@ from fastapi import APIRouter, Body
 from app.models.bookingModel import Booking
 from app.controllers.bookingController import (create_booking, 
     get_all_bookings,get_booking_by_id, update_booking, reject_booking_update, 
-    approve_booking_update, delete_booking, get_bookings_by_user, pay_booking_update)
+    approve_booking_update, delete_booking, get_bookings_by_user, pay_booking_update,
+    cancel_booking)
 
 router = APIRouter()
 
@@ -41,3 +42,7 @@ def get_bookings_for_user(user_id: str):
 @router.put("/booking/{booking_id}/pay")
 async def pay_booking(booking_id: str):
     return await pay_booking_update(booking_id)
+
+@router.put("/booking/{booking_id}/cancel")
+def cancel_booking_route(booking_id: str):
+    return cancel_booking(booking_id)
