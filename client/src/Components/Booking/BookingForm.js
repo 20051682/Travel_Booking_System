@@ -166,6 +166,11 @@ const BookingForm = () => {
         showConfirmButton: false,
       });
       setFormData(bookingModel);
+      
+      setTimeout(() => {
+        navigate('/payment', { state: { booking_id: result.booking_id } });
+      }, 2000);
+
     } else {
       Swal.fire({
         icon: 'error',

@@ -8,4 +8,11 @@ class Booking(BaseModel):
     start_date: str
     end_date: Optional[str] = None
     passengers: int
-    trip_type: str  # should be 'oneway' or 'round'
+    trip_type: str
+    mode: str
+    distance_km: Optional[str] = None
+    duration_min: Optional[str] = None
+    total_price: Optional[float] = None
+    payment_status: str = "pending"
+    booking_status: str = "pending"
+

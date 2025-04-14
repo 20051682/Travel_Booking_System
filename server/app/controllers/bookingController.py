@@ -54,14 +54,21 @@ async def create_booking(booking: Booking, mode: str = "car"):
         "distance_km": distance_km,
         "duration_min": duration_min,
         "total_price": total_price,
-        "status": "pending"  # Default status to 'pending' until approved
+        "payment_status": "pending",
+        "booking_status": "pending"
     })
 
     result = db.booking.insert_one(booking_dict)
+    # Fetch the full document after inserting
+    saved_booking = db.booking.find_one({"_id": result.inserted_id})
+
+    # Convert ObjectId to string for JSON response
+    saved_booking["_id"] = str(saved_booking["_id"])
+
     return {
         "message": "Booking successful",
         "booking_id": str(result.inserted_id),
-        "price": total_price
+        "booking_details": saved_booking
     }
 
 
@@ -114,3 +121,13 @@ def get_bookings_by_user(user_id: str):
     bookings = db.booking.find({"user_id": user_id})
     return [dict(item, _id=str(item["_id"])) for item in bookings]
 
+async def pay_booking_update(booking_id: str):
+    result = db.booking.update_one(
+        {"_id": ObjectId(booking_id)},
+        {"$set": {"payment_status": "paid", "booking_status": "booked"}}
+    )
+
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Booking not found or already paid")
+
+    return {"message": "Payment successful"}
