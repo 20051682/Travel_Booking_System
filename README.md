@@ -14,6 +14,7 @@ pip install pydantic[email]
 pip install firebase-admin
 pip install python-multipart
 pip install beautifulsoup4 requests
+pip install pytest httpx pytest-asyncio
 
 run the server
 
