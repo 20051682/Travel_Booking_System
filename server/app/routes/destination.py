@@ -42,11 +42,13 @@ async def modify_destination(
     destination_id: str,
     name: str = Form(...),
     description: str = Form(...),
+    url: str = Form(...),
     image_file: UploadFile = File(None)
 ):
     destination = Destination(
         name=name,
         description=description,
+        url=url,
     )
     return update_destination(destination_id, destination, image_file)
 

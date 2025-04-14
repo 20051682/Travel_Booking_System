@@ -47,7 +47,7 @@ def upload_image_to_firebase(image_file: UploadFile):
 def create_destination(destination: Destination, image_file: Optional[UploadFile] = None):
     destination_dict = destination.dict()
 
-    # Scrape the description if a URL is provided
+    # Scrape the description
     if destination.url:
         web_description = scrape_wikipedia_description(destination.url)
         if web_description:
@@ -96,6 +96,12 @@ def update_destination(dest_id: str, destination: Destination, image_file: Optio
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Image upload failed: {str(e)}")
 
+    # Scrape the description if a URL is provided
+    if destination.url:
+        web_description = scrape_wikipedia_description(destination.url)
+        if web_description:
+            destination_dict["web_description"] = web_description
+            
     updated = db.destination.update_one(
         {"_id": ObjectId(dest_id)},
         {"$set": destination_dict}

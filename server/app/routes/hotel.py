@@ -1,4 +1,3 @@
-# app/routes/destinationRoutes.py
 from fastapi import APIRouter, File, UploadFile, Form
 from app.models.hotelModel import Hotel
 from app.controllers.hotelController import (
