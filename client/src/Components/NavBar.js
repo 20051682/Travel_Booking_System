@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaUserCircle } from 'react-icons/fa'; // User icon
@@ -7,6 +7,12 @@ import logo from '../images/logo2.jpeg';
 const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("role");
+    setRole(userRole);
+  }, []);
 
   const handleLogout = () => {
     Swal.fire({
@@ -61,6 +67,11 @@ const NavBar = () => {
           <li className="nav-item">
             <a className={`nav-link ${location.pathname === '/hotels' ? 'active' : ''}`} href="/hotels">Hotels</a>
           </li>
+          {role === "admin" && (
+            <li className="nav-item">
+              <a className={`nav-link ${location.pathname === '/user_management' ? 'active' : ''}`} href="/user_management">User Management</a>
+            </li>
+          )}
         </ul>
 
         <div className="d-flex align-items-center mb-3">

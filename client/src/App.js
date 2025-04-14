@@ -20,6 +20,7 @@ import PaymentPage from './Components/Booking/PaymentPage';
 import BookingDetails from './Components/Booking/BookingDetails';
 import UpdateBooking from './Components/Booking/UpdateBooking';
 import UpdatePackageComponent from './Components/Packages/UpdatePakcageComponent';
+import UsersListComponent from './Components/User/UsersListComponent';
 
 function App() {
   return (
@@ -142,6 +143,13 @@ function App() {
          element={
           <PrivateRoute>
             <UpdatePackageComponent />
+          </PrivateRoute>
+         }
+        />
+        <Route path="/user_management"
+         element={
+          <PrivateRoute>
+            <UsersListComponent />
           </PrivateRoute>
          }
         />

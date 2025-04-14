@@ -16,9 +16,9 @@ const UpdateUserComponent = () => {
         first_name: '',
         last_name: '',
         email: '',
-        password: '',
         number: '',
-        role: ''
+        role: '',
+        password: ''
     });
 
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ const UpdateUserComponent = () => {
 
         axios.get(`http://127.0.0.1:8000/users/${user_id}`)
         .then((res) => {
-            setUser({ ...res.data, password: '' }); // Keep password empty for security
+            setUser(prev => ({ ...prev, ...res.data }));
         })
         .catch((err) => {
             console.error("Error fetching user:", err);
@@ -54,6 +54,12 @@ const UpdateUserComponent = () => {
         const token = localStorage.getItem('token');
         const user_info = JSON.parse(localStorage.getItem("user_info"));
         const user_id = user_info.id;
+        const payload = { ...user };
+
+        // If password is empty, remove it from the update payload
+        if (!payload.password || payload.password.trim() === "") {
+            delete payload.password;
+        }
 
         axios.put(`http://127.0.0.1:8000/users/${user_id}`, user, {
         headers: {
