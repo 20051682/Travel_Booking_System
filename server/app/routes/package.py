@@ -51,20 +51,24 @@ def get_package(package_id: str):
 async def modify_package(
     package_id: str,
     name: str = Form(...),
-    description: str = Form(...),
-    price_per_single_room: float = Form(...),
-    price_per_double_room: float = Form(...),
-    price_per_large_room: float = Form(...),
-    location: str = Form(...),
+    hotel_name: str = Form(...),
+    place_from: str = Form(...),
+    place_to: str = Form(...),
+    start_date: str = Form(...),
+    end_date: str = Form(...),
+    price: float = Form(...),
+    room_type: str = Form(...),
     image_file: UploadFile = File(None)
 ):
     package = Package(
         name=name,
-        description=description,
-        price_per_single_room=price_per_single_room,
-        price_per_double_room=price_per_double_room,
-        price_per_large_room=price_per_large_room,
-        location=location,
+        hotel_name=hotel_name,
+        place_from=place_from,
+        place_to=place_to,
+        start_date=start_date,
+        end_date=end_date,
+        price=price,
+        room_type=room_type
     )
     return update_package(package_id, package, image_file)
 

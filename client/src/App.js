@@ -19,6 +19,7 @@ import UpdateDestinationComponent from './Components/Booking/UpdateDestinationCo
 import PaymentPage from './Components/Booking/PaymentPage';
 import BookingDetails from './Components/Booking/BookingDetails';
 import UpdateBooking from './Components/Booking/UpdateBooking';
+import UpdatePackageComponent from './Components/Packages/UpdatePakcageComponent';
 
 function App() {
   return (
@@ -136,6 +137,13 @@ function App() {
               <UpdateBooking />
             </PrivateRoute>
           }
+        />
+        <Route path="/update_package/:packageId"
+         element={
+          <PrivateRoute>
+            <UpdatePackageComponent />
+          </PrivateRoute>
+         }
         />
         {/* 404 error */}
         <Route path="*" element={<NotFound />} />
