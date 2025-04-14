@@ -7,16 +7,16 @@ const AddPackageComponent = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
-    price_per_single_room: '',
-    price_per_double_room: '',
-    price_per_large_room: '',
+    hotel_name: '',
+    place_from: '',
+    place_to: '',
+    room_type: '',
     start_date: '',
     end_date: '',
-    location: '',
+    price: '',
   });
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null); 
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,7 +27,7 @@ const AddPackageComponent = () => {
     const file = e.target.files[0];
     setImage(file);
     if (file) {
-      setImagePreview(URL.createObjectURL(file)); 
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -44,26 +44,24 @@ const AddPackageComponent = () => {
     }
 
     try {
-      await axios.post('http://localhost:8000/hotel', payload, {
+      await axios.post('http://127.0.0.1:8000/package', payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      navigate("/hotels");
-
       Swal.fire({
         icon: 'success',
-        title: 'Hotel added successfully!',
-        text: 'Welcome back!',
+        title: 'Package added successfully!',
         timer: 2000,
         showConfirmButton: false,
       });
 
+      navigate("/packages");
     } catch (error) {
       console.error(error);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Adding failed!',
+        text: 'Failed to add package!',
       });
     } finally {
       setLoading(false);
@@ -72,19 +70,19 @@ const AddPackageComponent = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
-      <div className="card shadow p-4" style={{ maxWidth: '700px', width: '100%',marginTop: '5rem', marginBottom: '4rem' }}>
+      <div className="card shadow p-4" style={{ maxWidth: '700px', width: '100%', marginTop: '5rem', marginBottom: '4rem' }}>
         <h2 className="mb-4 text-center text-primary">Add a New Package</h2>
 
         <form onSubmit={handleSubmit}>
           {[
-            { label: 'Name', name: 'name', type: 'text' },
-            { label: 'Description', name: 'description', type: 'text' },
-            { label: 'Price (Single Room)', name: 'price_per_single_room', type: 'number' },
-            { label: 'Price (Double Room)', name: 'price_per_double_room', type: 'number' },
-            { label: 'Price (Large Room)', name: 'price_per_large_room', type: 'number' },
+            { label: 'Package Name', name: 'name', type: 'text' },
+            { label: 'Hotel Name', name: 'hotel_name', type: 'text' },
+            { label: 'From (Place)', name: 'place_from', type: 'text' },
+            { label: 'To (Place)', name: 'place_to', type: 'text' },
+            { label: 'Room Type', name: 'room_type', type: 'text' },
             { label: 'Start Date', name: 'start_date', type: 'date' },
             { label: 'End Date', name: 'end_date', type: 'date' },
-            { label: 'Location', name: 'location', type: 'text' },
+            { label: 'Price', name: 'price', type: 'number' },
           ].map(({ label, name, type }) => (
             <div className="mb-3" key={name}>
               <label className="form-label">{label}:</label>
@@ -99,7 +97,7 @@ const AddPackageComponent = () => {
           ))}
 
           <div className="mb-3">
-            <label className="form-label">Hotel Image:</label>
+            <label className="form-label">Package Image:</label>
             <input type="file" className="form-control" onChange={handleImageChange} />
             {imagePreview && (
               <div className="mt-3 text-center">
@@ -113,7 +111,7 @@ const AddPackageComponent = () => {
           </div>
 
           <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-            {loading ? 'Adding...' : 'Add Hotel'}
+            {loading ? 'Adding...' : 'Add Package'}
           </button>
         </form>
       </div>
