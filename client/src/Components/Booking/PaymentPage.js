@@ -37,7 +37,7 @@ const PaymentPage = () => {
   if (!booking) return <p>Loading...</p>;
 
   return (
-    <div className="payment-container">
+    <div className="payment-container mt-5">
       <h2>Payment Details</h2>
       <div className="booking-info">
         <p><strong>From:</strong> {booking.location_from}</p>

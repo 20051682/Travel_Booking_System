@@ -20,7 +20,7 @@ const HomePage = () => {
     <>
       <NavBar />
       <div className="container mt-5 text-center animate-fade-in">
-        <h1 className="display-4 fw-bold mb-3">🌍 Welcome to Travel Booking System!</h1>
+        <h1 className="display-4 fw-bold mb-3">🌍 Welcome to AHP Travel Booking System!</h1>
         <p className="lead">Plan your perfect trip with our curated hotels, packages, and easy booking system.</p>
       </div>
 

@@ -19,6 +19,8 @@ const BookingForm = () => {
   const [loading, setLoading] = useState(true);
   const [formErrors, setFormErrors] = useState({});
   const [adminBookings, setAdminBookings] = useState([]);
+  const [showDestinationModal, setShowDestinationModal] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState(null);
 
   const itemsPerPage = 6;
   const user_id = JSON.parse(localStorage.getItem("user_info")).id;
@@ -494,10 +496,23 @@ const BookingForm = () => {
                     <Card.Body>
                       <Card.Title>{destination.name}</Card.Title>
                       <Card.Text>{destination.description}</Card.Text>
-                      <Card.Text>{destination.web_description}</Card.Text>
+                      <Card.Text>
+                        {destination.web_description.length > 50
+                          ? `${destination.web_description.slice(0, 50)}...`
+                          : destination.web_description}
+                      </Card.Text>
 
                       {role === "user" && (
-                        <Button variant="info">View</Button>
+                        <Button
+                          variant="info"
+                          onClick={() => {
+                            setSelectedDestination(destination);
+                            setShowDestinationModal(true);
+                          }}
+                        >
+                          View
+                        </Button>
+
                       )}
 
                       {role === "admin" && (
@@ -538,6 +553,7 @@ const BookingForm = () => {
           </Col>
         </Row>
 
+        {/* show booking model */}
         <Modal show={bookingsModal} onHide={() => setBookingsModal(false)} centered size="lg">
           <Modal.Header closeButton>
             <Modal.Title>My Bookings</Modal.Title>
@@ -578,6 +594,35 @@ const BookingForm = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+        
+        {/* show destination view model */}
+        <Modal show={showDestinationModal} onHide={() => setShowDestinationModal(false)} centered size="lg">
+          <Modal.Header closeButton>
+            <Modal.Title>Destination Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selectedDestination && (
+              <>
+                <img
+                  src={selectedDestination.image_url}
+                  alt={selectedDestination.name}
+                  className="img-fluid mb-3"
+                  style={{ maxHeight: '300px', objectFit: 'cover', width: '100%' }}
+                />
+                <h4>{selectedDestination.name}</h4>
+                <p><strong>Description:</strong> {selectedDestination.description}</p>
+                <p><strong>Website Description:</strong> {selectedDestination.web_description}</p>
+                {/* Add more fields if needed */}
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowDestinationModal(false)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
       </Container>
     </>
   );
