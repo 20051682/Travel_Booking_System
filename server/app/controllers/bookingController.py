@@ -43,11 +43,11 @@ async def create_booking(booking: Booking, mode: str = "car"):
     distance_km = round(data["distances"][0][1] / 1000, 2)
     duration_min = round(data["durations"][0][1] / 60, 2)
 
-    price_per_km = 0.10 if mode == "car" else 0.05
+    price_per_km = 0.30 if mode == "car" else 0.15
     total_price = round(distance_km * price_per_km * booking.passengers, 2)
 
     if booking.trip_type == "round":
-        total_price *= 2  # Double the price for round trips
+        total_price *= 2
 
     booking_dict = booking.dict()
     booking_dict.update({

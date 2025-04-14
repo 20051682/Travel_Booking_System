@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { bookingModel } from '../../Models/bookingModel';
-import { submitBookingForm, getUserBookings, getAllBookings } from '../../Controllers/bookingController';
+import { submitBookingForm, getUserBookings, getAllBookings, deleteBooking, cancelBooking } from '../../Controllers/bookingController';
 import '../../styles/BookingForm.css';
 import NavBar from '../NavBar'
 import Swal from 'sweetalert2';
@@ -195,14 +195,72 @@ const BookingForm = () => {
   );
 
   const handleDelete = async (destinationId) => {
-    try {
-      await deleteDestination(destinationId);
-      const updatedData = await fetchDestinations();
-      setDestinations(updatedData);
-    } catch (error) {
-      console.error("Failed to delete or refresh", error);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteDestination(destinationId);
+          const updatedData = await fetchDestinations();
+          setDestinations(updatedData);
+        } catch (error) {
+          console.error("Failed to delete or refresh", error);
+        }
+      }
+    });
   };
+  
+  const handleBookingDelete = async (bookingId) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteBooking(bookingId);
+          const updatedData = await getAllBookings();
+          setAdminBookings(updatedData);
+          Swal.fire('Deleted!', 'Booking has been deleted.', 'success');
+        } catch (error) {
+          console.error('Error deleting booking:', error);
+          Swal.fire('Error', 'Failed to delete booking', 'error');
+        }
+      }
+    });
+  };  
+
+  // const handleCancel = async () => {
+  //   try {
+  //     await cancelBooking(bookingId);
+
+  //     Swal.fire({
+  //       icon: 'success',
+  //       title: 'Booking cancled successfully!',
+  //       text: 'Thank you!',
+  //       timer: 2000,
+  //       showConfirmButton: false,
+  //     });
+
+  //     navigate("/bookings");
+  //   } catch (err) {
+  //     console.error("Cancel failed", err);
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Oops...',
+  //       text: 'Error canceling booking! Please try again!',
+  //     });
+
+  //   }
+  // };
 
   const getStatusBadge = (status) => {
     switch (status.toLowerCase()) {
@@ -342,7 +400,7 @@ const BookingForm = () => {
 
           {role === "admin" && (
             <Col md={6} className="mb-4">
-              <h3>Booking Management</h3>
+              <h3>User Bookings</h3>
 
               {adminBookings.length === 0 ? (
                 <p>No bookings available.</p>
@@ -360,13 +418,17 @@ const BookingForm = () => {
                         <th>Passengers</th>
                         <th>Type</th>
                         <th>Mode</th>
+                        <th>Price</th>
+                        <th>Payment Status</th>
+                        <th>Booking Status</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {adminBookings.map((booking, index) => (
                         <tr key={booking._id}>
                           <td>{index + 1}</td>
-                          <td>{booking.user_name || booking.user_id}</td>
+                          <td>{booking.username}</td>
                           <td>{booking.location_from}</td>
                           <td>{booking.location_to}</td>
                           <td>{booking.start_date}</td>
@@ -374,6 +436,17 @@ const BookingForm = () => {
                           <td>{booking.passengers}</td>
                           <td>{booking.trip_type}</td>
                           <td>{booking.mode}</td>
+                          <td>€{booking.total_price}</td>
+                          <td>{getStatusBadge(booking.payment_status)}</td>
+                          <td>{getBookingBadge(booking.booking_status)}</td>
+                          <td>
+                          {/* <Button variant="danger" onClick={handleCancel(booking._id)}>
+                            Cancel Booking
+                          </Button> */}
+                          <Button variant="danger" onClick={() => handleBookingDelete(booking._id)}>
+                            Delete
+                          </Button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -383,7 +456,7 @@ const BookingForm = () => {
             </Col>
           )}
 
-
+              {/* Destination  */}
           <Col md={6} className="mb-4">
           <Row className="align-items-center mb-3">
             <Col>

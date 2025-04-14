@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updateDestination, fetchDestinationById } from '../../Controllers/destinationController';
+import NavBar from '../NavBar';
 
 const UpdateDestinationComponent = () => {
   const { destinationId } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({ name: '', description: '' });
+  const [formData, setFormData] = useState({ name: '', description: '', url: '' });
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const UpdateDestinationComponent = () => {
     const loadDestination = async () => {
       try {
         const data = await fetchDestinationById(destinationId);
-        setFormData({ name: data.name, description: data.description });
+        setFormData({ name: data.name, description: data.description, url: data.url });
         setImagePreview(data.image_url); // Show image
       } catch (error) {
         console.error(error);
@@ -43,6 +44,8 @@ const UpdateDestinationComponent = () => {
   };
 
   return (
+    <>
+    <NavBar />
     <div className="container mt-5">
       <div className="card shadow p-4" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <h2 className="mb-4 text-center text-primary">Update Destination</h2>
@@ -56,6 +59,11 @@ const UpdateDestinationComponent = () => {
           <div className="mb-3">
             <label className="form-label">Description:</label>
             <input type="text" name="description" className="form-control" value={formData.description} onChange={handleChange} required />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Wikipedia Url:</label>
+            <input type="text" name="url" className="form-control" value={formData.url} onChange={handleChange} required />
           </div>
 
           <div className="mb-3">
@@ -78,6 +86,8 @@ const UpdateDestinationComponent = () => {
         </form>
       </div>
     </div>
+    </>
+
   );
 };
 
