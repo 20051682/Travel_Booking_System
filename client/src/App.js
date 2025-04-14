@@ -16,6 +16,7 @@ import AddPackage from './Components/Packages/AddPackagePage';
 import UpdateUserComponent from './Components/User/UpdateUserComponent';
 import AddDestinationComponent from './Components/Booking/AddDestinationComponent';
 import UpdateDestinationComponent from './Components/Booking/UpdateDestinationComponent'
+import PaymentPage from './Components/Booking/PaymentPage';
 
 function App() {
   return (
@@ -110,7 +111,14 @@ function App() {
             </PrivateRoute>
           }
         />
-        
+        <Route
+          path="/payment"
+          element={
+            <PrivateRoute>
+              <PaymentPage />
+            </PrivateRoute>
+          }
+        />
         {/* 404 error */}
         <Route path="*" element={<NotFound />} />
       </Routes>
